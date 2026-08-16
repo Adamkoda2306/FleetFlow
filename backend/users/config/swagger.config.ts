@@ -8,9 +8,9 @@ const options: swaggerJSDoc.Options = {
     openapi: "3.0.0",
 
     info: {
-      title: "FleetFlow - Auth API Documentation",
+      title: "FleetFlow - USET API Documentation",
       version: "1.0.0",
-      description: "API documentation for FleetFlow Auth Backend",
+      description: "API documentation for FleetFlow USER Backend",
     },
 
     servers: [
@@ -31,8 +31,8 @@ const options: swaggerJSDoc.Options = {
         description: "Health check endpoints",
       },
       {
-        name: "Authentication",
-        description: "Authentication and authorization endpoints",
+        name: "Users",
+        description: "User management endpoints",
       },
     ],
 
