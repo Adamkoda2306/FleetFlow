@@ -81,11 +81,11 @@ export class UserModel {
     email: string,
     passwordHash: string,
     role: UserRole = "USER"
-  ): Promise<User> {
-    const [result] = await pool.execute<ResultSetHeader>(
+  ): Promise<User | []> {
+    await pool.execute<ResultSetHeader>(
       `
       INSERT INTO users (
-        id
+        id,
         name,
         email,
         password_hash,
@@ -96,7 +96,7 @@ export class UserModel {
       [id, name, email, passwordHash, role]
     );
 
-    const user = await this.findById(result.id);
+    const user: User | [] = await this.findById(id);
 
     if (!user) {
       throw new Error("User was created but could not be retrieved");
@@ -107,7 +107,7 @@ export class UserModel {
 
   // Update user name
   static async updateName(
-    id: number,
+    id: string,
     name: string
   ): Promise<boolean> {
     const [result] = await pool.execute<ResultSetHeader>(
@@ -124,7 +124,7 @@ export class UserModel {
 
   // Update user's password
   static async updatePassword(
-    id: number,
+    id: string,
     passwordHash: string
   ): Promise<boolean> {
     const [result] = await pool.execute<ResultSetHeader>(
@@ -141,7 +141,7 @@ export class UserModel {
 
   // Update user role
   static async updateRole(
-    id: number,
+    id: string,
     role: UserRole
   ): Promise<boolean> {
     const [result] = await pool.execute<ResultSetHeader>(
@@ -158,7 +158,7 @@ export class UserModel {
 
   // Delete user
   static async delete(
-    id: number
+    id: string
   ): Promise<boolean> {
     const [result] = await pool.execute<ResultSetHeader>(
       `
