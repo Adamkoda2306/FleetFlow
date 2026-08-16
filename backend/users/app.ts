@@ -6,6 +6,7 @@ import hpp from "hpp";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.config";
 import generalRoutes from "./routes/general.routes";
+import userRoutes from "./routes/user.routes";
 
 
 const app: Application = express();
@@ -68,7 +69,7 @@ app.use(
 app.use("/", generalRoutes);
 
 // API routes
-
+app.use("/api/v1/", userRoutes);
 
 
 
