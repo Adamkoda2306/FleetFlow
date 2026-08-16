@@ -1,10 +1,12 @@
-import express, { Application, Request, Response, NextFunction } from "express";
-import type { RequestHandler } from "express";
+import express, { Application } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import hpp from "hpp";
-import { dashboardRouter, log } from "logsave-hub";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./config/swagger.config";
+import generalRoutes from "./routes/general.routes";
+
 
 const app: Application = express();
 
@@ -55,31 +57,20 @@ app.use(
 );
 
 /* ----------------------- ROUTES ------------------------ */
-// Root health check
-app.get("/", (_req, res) => {
-  res.json({
-    success: true,
-    message: "FleetFlow Auth Service is Live",
-  });
-});
+// Swagger API Documentation UI
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
+);
 
-// Dashboard for Backend Logs
-app.use("/logsave-hub", dashboardRouter as unknown as RequestHandler);
+// General API routes
+app.use("/", generalRoutes);
 
 // API routes
 
 
-// 404 handling
-app.use((req: Request, res: Response) => {
-    log.warn(`Route Not Found -> ${req.method} ${req.originalUrl}`);
-    res.status(404).json({ error: "Not Found!"});
-});
 
-// Error Handling
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    log.error(`Error: `, err.message);
-    res.status(500).json({ error: "Internal Server Error!"});
-});
 
 export { app };
 export default app;

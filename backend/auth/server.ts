@@ -3,7 +3,6 @@ dotenv.config();
 import { Server } from "socket.io";
 import http from "http";
 import enableLogging, { log, attachDashboard } from "logsave-hub";
-import connectDB from "./config/db.config";
 import app from './app';
 
 
@@ -21,7 +20,6 @@ enableLogging({
 
 async function startServer() {
   try {
-    await connectDB();
     server.listen(process.env.PORT, () => {
       log.save(`[SERVER] Running on http://localhost:${process.env.PORT}`);
       log.save(`[SERVER] Environment: ${process.env.NODE_ENV}`);
