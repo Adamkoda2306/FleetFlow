@@ -15,7 +15,7 @@ import {
     updateUserPassword,
     updateUserRole
 } from "../services/user.services";
-import { User, UserRole } from "../models/user.model";
+import { UserRole } from "../models/user.model";
 
 const getUsersController = async (req: AuthRequest, res: Response, next: NextFunction) => {
     if (typeof req.user === 'object' && req.user !== null && 'id' in req.user) {
