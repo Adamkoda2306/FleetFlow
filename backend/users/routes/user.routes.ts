@@ -9,6 +9,7 @@ import {
     updatePasswordController,
     updateRoleController
 } from "../controllers/user.controller";
+import adminMiddleware from "../middlewares/admin.middleware";
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.patch("/users/:id/name", authMiddleware, updateNameController);
 
 router.patch("/users/:id/password", authMiddleware, updatePasswordController);
 
-router.patch("/users/:id/role", authMiddleware, updateRoleController);
+router.patch("/users/:id/role", authMiddleware, adminMiddleware, updateRoleController);
 
 router.delete("/users/:id", authMiddleware, deleteUserController);
 

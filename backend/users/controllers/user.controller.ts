@@ -150,12 +150,6 @@ const updatePasswordController = async (req: AuthRequest, res: Response, next: N
 
 const updateRoleController = async (req: AuthRequest, res: Response, next: NextFunction) => {
     if (typeof req.user === 'object' && req.user !== null && 'id' in req.user) {
-        if (req.user.role !== 'ADMIN') {
-            return res.status(403).json({
-                success: false,
-                message: 'Unauthorized Access!'
-            });
-        }
         try {
             const id: string = req.params.id as string;
             const role: UserRole = req.body.role as UserRole;

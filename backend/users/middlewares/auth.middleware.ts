@@ -1,8 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
+export interface AuthPayload {
+  id: string;
+  role: "USER" | "ADMIN" | "MEDIATER";
+}
+
 export interface AuthRequest extends Request {
-  user?: string | JwtPayload;
+  user?: AuthPayload;
 }
 
 // authMiddleware
@@ -28,7 +33,27 @@ const authMiddleware = (
     }
 
     const decoded = jwt.verify(token, secret);
-    req.user = decoded;
+    if (typeof decoded === "string") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token payload",
+      });
+    }
+
+    if (
+      typeof decoded.id !== "string" ||
+      !["USER", "ADMIN", "MEDIATER"].includes(decoded.role as string)
+    ) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token payload",
+      });
+    }
+    
+    req.user = {
+      id: decoded.id,
+      role: decoded.role as AuthPayload["role"],
+    };
 
     next();
   } catch (error) {
