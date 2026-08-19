@@ -38,12 +38,6 @@ router.get("/", (_req, res) => {
 // Logs DashBoard
 router.use("/logsave-hub", dashboardRouter as unknown as RequestHandler);
 
-// 404 handling
-router.use((req: Request, res: Response) => {
-    log.warn(`Route Not Found -> ${req.method} ${req.originalUrl}`);
-    res.status(404).json({ error: "Not Found!"});
-});
-
 // Error Handling
 router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     log.error(`Error: `, err.message);
