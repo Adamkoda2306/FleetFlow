@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
+import "./grpc/grpc.server";
 import { Server } from "socket.io";
 import http from "http";
 import enableLogging, { log, attachDashboard } from "logsave-hub";
