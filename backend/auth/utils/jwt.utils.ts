@@ -10,7 +10,7 @@ const generateToken = async (id: string): Promise<
   if (!process.env.SECRET_KEY) {
     return {
       success: false,
-      message: "Error in generating the API Key for the RTQI Score."
+      message: "Error in generating JWT token!"
     };
   }
 
@@ -36,7 +36,7 @@ export const generateTokenUser = async (id: string, role: string, isRefresh: boo
   if (!process.env.SECRET_KEY) {
     return {
       success: false,
-      message: "Error in generating the API Key for the RTQI Score."
+      message: "Error in generating JWT token!"
     };
   }
 
