@@ -1,4 +1,4 @@
-export interface LoginServiceResponseInterface { 
+export interface RegisterServiceResponseInterface { 
     statusCode: number;
     success: boolean;
     message: string;

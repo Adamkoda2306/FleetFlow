@@ -1,13 +1,13 @@
 import { Response, Request, NextFunction } from "express";
-import { LoginInterface } from "../interface/auth.interface";
-import { LoginServiceResponseInterface } from "../interface/auth.routes.interface";
-import { loginService } from "../services/auth.services";
+import { RegisterInterface } from "../interface/auth.interface";
+import { RegisterServiceResponseInterface } from "../interface/auth.routes.interface";
+import { registerService } from "../services/auth.services";
 
 
-const loginController = async (req: Request, res: Response, next: NextFunction) => {
+const registerController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const data: LoginInterface = req.body as LoginInterface;
-        const result: LoginServiceResponseInterface = await loginService(data);
+        const data: RegisterInterface = req.body as RegisterInterface;
+        const result: RegisterServiceResponseInterface = await registerService(data);
         return res.status(result.statusCode).json({ 
             success: result.success, 
             message: result.message, 
@@ -23,5 +23,5 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
 };
 
 export {
-    loginController
+    registerController
 };
