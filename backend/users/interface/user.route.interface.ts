@@ -12,6 +12,8 @@ export interface generalResponseInterface {
     statusCode: number;
     success: boolean;
     message: string;
+    id?: string;
+    role?: string;
 };
 
 export interface createUserInterface {

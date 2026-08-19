@@ -75,9 +75,11 @@ const createUser = async (data: createUserInterface): Promise<generalResponseInt
         return {
             statusCode: userCreated ? 201 : 400,
             success: userCreated,
-            message: userCreated ? 'Successfully Created the User!' : 'Unable to Create User'
+            message: userCreated ? 'Successfully Created the User!' : 'Unable to Create User',
+            ...(userCreated ? { id: result.id, role: result.role } : {}),
         };
     } catch (err: any) {
+        console.log('Error at createUser in user.service: ', err.message);
         return {
             statusCode: 500,
             success: false,
