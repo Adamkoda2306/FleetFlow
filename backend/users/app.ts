@@ -1,10 +1,11 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import hpp from "hpp";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger.config";
+import { log } from "logsave-hub";
 import generalRoutes from "./routes/general.routes";
 import userRoutes from "./routes/user.routes";
 
@@ -71,7 +72,11 @@ app.use("/", generalRoutes);
 // API routes
 app.use("/api/v1/", userRoutes);
 
-
+// 404 handling
+app.use((req: Request, res: Response) => {
+    log.warn(`Route Not Found -> ${req.method} ${req.originalUrl}`);
+    res.status(404).json({ error: "Not Found!"});
+});
 
 export { app };
 export default app;
