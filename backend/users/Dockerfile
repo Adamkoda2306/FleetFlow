@@ -5,4 +5,4 @@ RUN npm install --legacy-peer-deps
 RUN npm install -g ts-node typescript
 COPY . .
 EXPOSE 3001
-CMD [ "npx", "ts-node", "server.ts" ]
+CMD ["sh", "-c", "npm run setupDB && npx ts-node server.ts"]
