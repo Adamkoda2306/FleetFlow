@@ -91,7 +91,7 @@ export class UserModel {
         password_hash,
         role
       )
-      VALUES (?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?)
       `,
       [id, name, email, passwordHash, role]
     );
