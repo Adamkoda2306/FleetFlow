@@ -32,26 +32,27 @@ export class AddressModel {
         pincode: string,
         type: AddressType = 'HOME', 
         longitude: number, 
-        latitude: number): Promise<boolean> {
-            const [result] = await pool.execute<ResultSetHeader>(
-                `
-                INSERT INTO \`users-address\` (
-                    id,
-                    user_id,
-                    address_line1,
-                    address_line2,
-                    city,
-                    state,
-                    country,
-                    pincode,
-                    type,
-                    longitude,
-                    latitude
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                `,
-                [id, user_id, address_line1, address_line2, city, state, country, pincode, type, longitude, latitude]
-            );
-            return result.affectedRows > 0;
+        latitude: number
+    ): Promise<boolean> {
+        const [result] = await pool.execute<ResultSetHeader>(
+            `
+            INSERT INTO \`users-address\` (
+                id,
+                user_id,
+                address_line1,
+                address_line2,
+                city,
+                state,
+                country,
+                pincode,
+                type,
+                longitude,
+                latitude
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `,
+            [id, user_id, address_line1, address_line2, city, state, country, pincode, type, longitude, latitude]
+        );
+        return result.affectedRows > 0;
     }
 
     // find address by id
@@ -83,24 +84,25 @@ export class AddressModel {
         pincode: string, 
         type: AddressType,
         longitude: number, 
-        latitude: number): Promise<boolean> {
-            const [result] = await pool.execute<ResultSetHeader>(
-                `
-                UPDATE \`users-address\`
-                SET address_line1 = ?, 
-                    address_line2 = ?, 
-                    city = ?,
-                    state = ?,
-                    country = ?,
-                    pincode = ?,
-                    type = ?,
-                    longitude = ?,
-                    latitude = ?
-                WHERE id = ?
-                `,
-                [address_line1, address_line2, city, state, country, pincode, type, longitude, latitude, id]
-            );
-            return result.affectedRows > 0;
+        latitude: number
+    ): Promise<boolean> {
+        const [result] = await pool.execute<ResultSetHeader>(
+            `
+            UPDATE \`users-address\`
+            SET address_line1 = ?, 
+                address_line2 = ?, 
+                city = ?,
+                state = ?,
+                country = ?,
+                pincode = ?,
+                type = ?,
+                longitude = ?,
+                latitude = ?
+            WHERE id = ?
+            `,
+            [address_line1, address_line2, city, state, country, pincode, type, longitude, latitude, id]
+        );
+        return result.affectedRows > 0;
     }
 
     // delete address
