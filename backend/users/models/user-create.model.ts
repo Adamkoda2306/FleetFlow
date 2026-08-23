@@ -88,7 +88,7 @@ export const createHistoryTableQuery = `
 
     order_at DATETIME,
 
-    recieved_at DATETIME,
+    received_at DATETIME,
 
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
