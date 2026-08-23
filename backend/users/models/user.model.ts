@@ -96,7 +96,7 @@ export class UserModel {
         is_active,
         fcm_token
       )
-      VALUES (?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
       `,
       [id, name, email, phonenumber, role, is_active, fcm_token]
     );
