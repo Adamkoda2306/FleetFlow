@@ -2,6 +2,8 @@ export const createAuthTableQuery = `
   CREATE TABLE IF NOT EXISTS auth (
     id CHAR(64) NOT NULL,
 
+    user_id CHAR(64) NOT NULL UNIQUE,
+
     name VARCHAR(100) NOT NULL,
 
     email VARCHAR(255) UNIQUE,
