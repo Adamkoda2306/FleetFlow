@@ -1,5 +1,6 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { pool } from "../config/db.config";
+import { Pool, PoolConnection } from "mysql2/promise";
 
 
 export type UserRole = "USER" | "ADMIN" | "MEDIATER";
@@ -22,8 +23,10 @@ interface UserRow extends RowDataPacket, User {}
 export class UserModel {
 
   // Get all users
-  static async getAllUsers(): Promise<User[] | []> {
-    const [rows] = await pool.execute<UserRow[]>(
+  static async getAllUsers(
+    connection: Pool | PoolConnection = pool
+  ): Promise<User[] | []> {
+    const [rows] = await connection.execute<UserRow[]>(
       `
       SELECT * FROM \`users-main\`;
       `
@@ -32,8 +35,11 @@ export class UserModel {
   }
 
   // Find user by ID
-  static async findById(id: string): Promise<User | []> {
-    const [rows] = await pool.execute<UserRow[]>(
+  static async findById(
+    id: string,
+    connection: Pool | PoolConnection = pool
+  ): Promise<User | []> {
+    const [rows] = await connection.execute<UserRow[]>(
       `
       SELECT *
       FROM \`users-main\`
@@ -47,8 +53,11 @@ export class UserModel {
   }
 
   // Find user by email
-  static async findByEmail(email: string): Promise<User | []> {
-    const [rows] = await pool.execute<UserRow[]>(
+  static async findByEmail(
+    email: string,
+    connection: Pool | PoolConnection = pool
+  ): Promise<User | []> {
+    const [rows] = await connection.execute<UserRow[]>(
       `
       SELECT *
       FROM \`users-main\`
@@ -61,8 +70,11 @@ export class UserModel {
     return rows.length > 0 ? rows[0] : [];
   }
 
-  static async findByPhonenumber(phone: string): Promise<User | []> {
-    const [row] = await pool.execute<UserRow[]>(
+  static async findByPhonenumber(
+    phone: string,
+    connection: Pool | PoolConnection = pool
+  ): Promise<User | []> {
+    const [row] = await connection.execute<UserRow[]>(
       `
       SELECT *
       FROM \`users-main\`
@@ -83,9 +95,10 @@ export class UserModel {
     phonenumber: string,
     fcm_token: string,
     is_active: true,
-    role: UserRole = "USER"
+    role: UserRole = "USER",
+    connection: Pool | PoolConnection = pool
   ): Promise<User | []> {
-    await pool.execute<ResultSetHeader>(
+    await connection.execute<ResultSetHeader>(
       `
       INSERT INTO \`users-main\` (
         id,
@@ -101,7 +114,7 @@ export class UserModel {
       [id, name, email, phonenumber, role, is_active, fcm_token]
     );
 
-    const user: User | [] = await this.findById(id);
+    const user: User | [] = await this.findById(id, connection);
 
     if (!user) {
       throw new Error("User was created but could not be retrieved");
@@ -113,9 +126,10 @@ export class UserModel {
   // Update user name
   static async updateName(
     id: string,
-    name: string
+    name: string,
+    connection: Pool | PoolConnection = pool
   ): Promise<boolean> {
-    const [result] = await pool.execute<ResultSetHeader>(
+    const [result] = await connection.execute<ResultSetHeader>(
       `
       UPDATE \`users-main\`
       SET name = ?
@@ -130,9 +144,10 @@ export class UserModel {
   // Update user's password
   static async updatePhonenumber(
     id: string,
-    phonenumber: string
+    phonenumber: string,
+    connection: Pool | PoolConnection = pool
   ): Promise<boolean> {
-    const [result] = await pool.execute<ResultSetHeader>(
+    const [result] = await connection.execute<ResultSetHeader>(
       `
       UPDATE \`users-main\`
       SET phonenumber = ?
@@ -146,9 +161,10 @@ export class UserModel {
   // Update user role
   static async updateRole(
     id: string,
-    role: UserRole
+    role: UserRole,
+    connection: Pool | PoolConnection = pool
   ): Promise<boolean> {
-    const [result] = await pool.execute<ResultSetHeader>(
+    const [result] = await connection.execute<ResultSetHeader>(
       `
       UPDATE \`users-main\`
       SET role = ?
@@ -161,8 +177,12 @@ export class UserModel {
   }
 
   // Update user fcm_token
-  static async updateFcmToken(id: string, fcm_token: string): Promise<boolean> {
-    const [result] = await pool.execute<ResultSetHeader>(
+  static async updateFcmToken(
+    id: string, 
+    fcm_token: string, 
+    connection: Pool | PoolConnection = pool
+  ): Promise<boolean> {
+    const [result] = await connection.execute<ResultSetHeader>(
       `
       UPDATE \`users-main\`
       SET fcm_token = ?
@@ -175,8 +195,12 @@ export class UserModel {
   }
 
   // Update user is_active
-  static async updateIsActive(id: string, is_active: boolean): Promise<boolean> {
-    const [result] = await pool.execute<ResultSetHeader>(
+  static async updateIsActive(
+    id: string, 
+    is_active: boolean, 
+    connection: Pool | PoolConnection = pool
+  ): Promise<boolean> {
+    const [result] = await connection.execute<ResultSetHeader>(
       `
       UPDATE \`users-main\`
       SET is_active = ?
@@ -189,9 +213,10 @@ export class UserModel {
 
   // Delete user
   static async delete(
-    id: string
+    id: string,
+    connection: Pool | PoolConnection = pool
   ): Promise<boolean> {
-    const [result] = await pool.execute<ResultSetHeader>(
+    const [result] = await connection.execute<ResultSetHeader>(
       `
       DELETE FROM \`users-main\`
       WHERE id = ?
