@@ -4,38 +4,56 @@ package users;
 
 service UserService {
 
-    rpc CreateUser(CreateUserRequest)
-        returns (CreateUserResponse);
+    rpc registerUser(CreateUserRequest)
+        returns (FinalUserResponse);
 
-    rpc GetUser(GetUserRequest)
-        returns (GetUserResponse);
-
+    rpc updateLogin(UpdateUserLogin)
+        returns (FinalUserResponse);
+    
+    rpc updateLogout(UpdateUserLogout)
+        returns (FinalUserResponse);
+    
+    rpc updateName(UpdateUserName)
+        returns (FinalUserResponse);
+    
+    rpc updatePhonenumber(UpdateUserPhonenumber)
+        returns (FinalUserResponse);
 }
 
 
 message CreateUserRequest {
     string name = 1;
     string email = 2;
-    string password_hash = 3;
+    string phonenumber = 3;
+    string fcm_token = 4;
+}
+
+message UpdateUserLogin {
+    string id = 1;
+    bool is_active = 2;
+    string fcm_token = 3;
+}
+
+message UpdateUserLogout {
+    string id = 1;
+    bool is_active = 2;
+}
+
+message UpdateUserName {
+    string id = 1;
+    string name = 2;
+}
+
+message UpdateUserPhonenumber {
+    string id = 1;
+    string phonenumber = 2;
 }
 
 
-message CreateUserResponse {
+message FinalUserResponse {
     int32 statusCode = 1;
     bool success = 2;
     string message = 3;
     string id = 4;
     string role = 5;
-}
-
-
-message GetUserRequest {
-    string id = 1;
-}
-
-
-message GetUserResponse {
-    int32 statusCode = 1;
-    bool success = 2;
-    string message = 3;
 }
