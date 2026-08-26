@@ -1,4 +1,11 @@
-import { CreateUserRequest, CreateUserResponse, GetUserRequest, GetUserResponse } from "../interface/grpc.interface";
+import { 
+    CreateUserRequest, 
+    FinalUserResponse,
+    UpdateUserLogin, 
+    UpdateUserLogout,
+    UpdateUserName,
+    UpdateUserPhonenumber 
+} from "../interface/grpc.interface";
 import { userClient } from "./grpc.client";
 
 
@@ -6,10 +13,10 @@ import { userClient } from "./grpc.client";
 // CREATE USER
 // ===============================
 
-const createUserGrpc = (data: CreateUserRequest): Promise<CreateUserResponse> => {
+const createUserGrpc = (data: CreateUserRequest): Promise<FinalUserResponse> => {
     return new Promise( (resolve, reject) => {
             const deadline = new Date(Date.now() + 3000);
-            userClient.CreateUser( data, { deadline }, ( error: any, response: CreateUserResponse ) => {
+            userClient.registerUser( data, { deadline }, ( error: any, response: FinalUserResponse ) => {
                     if (error) {
                         return reject(error);
                     }
@@ -23,13 +30,13 @@ const createUserGrpc = (data: CreateUserRequest): Promise<CreateUserResponse> =>
 
 
 // ===============================
-// GET USER
+// LOGIN UPDATE
 // ===============================
 
-const getUserGrpc = (data: GetUserRequest): Promise<GetUserResponse> => {
+const loginUpdateGrpc = (data: UpdateUserLogin): Promise<FinalUserResponse> => {
     return new Promise((resolve, reject) => {
             const deadline = new Date(Date.now() + 3000);
-            userClient.GetUser(data, { deadline }, (error: any, response: GetUserResponse) => {
+            userClient.updateLogin(data, { deadline }, (error: any, response: FinalUserResponse) => {
                     if (error) {
                         return reject(error);
                     }
@@ -40,7 +47,58 @@ const getUserGrpc = (data: GetUserRequest): Promise<GetUserResponse> => {
     );
 };
 
+// ===============================
+// LOGOUT UPDATE
+// ===============================
+
+const logoutUpdateGrpc = (data: UpdateUserLogout): Promise<FinalUserResponse> => {
+    return new Promise((resolve, reject) => {
+        const deadline = new Date(Date.now() + 3000);
+        userClient.updateLogout(data, { deadline }, (error: any, response: FinalUserResponse) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(response);
+        });
+    });
+}
+
+// ===============================
+// UPDATE NAME
+// ===============================
+
+const updateNameGrpc = async (data: UpdateUserName): Promise<FinalUserResponse> => {
+    return new Promise((resolve, reject) => {
+        const deadline = new Date(Date.now() + 3000);
+        userClient.updateName(data, { deadline }, (error: any, response: FinalUserResponse) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(response);
+        });
+    }); 
+}
+
+// ===============================
+// UPDATE PHONENUMBER
+// ===============================
+
+const updatePhonenumberGrpc = async (data: UpdateUserPhonenumber): Promise<FinalUserResponse> => {
+    return new Promise((resolve, reject) => {
+        const deadline = new Date(Date.now() + 3000);
+        userClient.updatePhonenumber(data, { deadline }, (error: any, response: FinalUserResponse) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(response);
+        });
+    }); 
+}
+
 export {
     createUserGrpc,
-    getUserGrpc
+    loginUpdateGrpc,
+    logoutUpdateGrpc,
+    updateNameGrpc,
+    updatePhonenumberGrpc
 };

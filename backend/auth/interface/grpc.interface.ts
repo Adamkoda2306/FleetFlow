@@ -1,11 +1,12 @@
 export interface CreateUserRequest {
     name: string;
     email: string;
-    password_hash: string;
+    phonenumber: string;
+    fcm_token: string;
 }
 
 
-export interface CreateUserResponse {
+export interface FinalUserResponse {
     statusCode: number;
     success: boolean;
     message: string;
@@ -13,13 +14,23 @@ export interface CreateUserResponse {
     role?: string;
 }
 
-export interface GetUserRequest {
+export interface UpdateUserLogin {
     id: string;
+    is_active: boolean;
+    fcm_token: string;
 }
 
+export interface UpdateUserLogout {
+    id: string;
+    is_active: boolean;
+}
 
-export interface GetUserResponse {
-    statusCode: number;
-    success: boolean;
-    message: string;
+export interface UpdateUserName {
+    id: string;
+    name: string;
+}
+
+export interface UpdateUserPhonenumber {
+    id: string;
+    phonenumber: string;
 }
