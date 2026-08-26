@@ -66,11 +66,31 @@ const getUserById = async (id: string): Promise<getUsersInterface> => {
     }
 };
 
+const getUserByPhoneNumber = async (phonenumber: string): Promise<getUsersInterface> => {
+    try {
+        const result: User | [] = await UserModel.findByPhonenumber(phonenumber);
+        const userFound = !Array.isArray(result);
+        return {
+            statusCode: userFound ? 200 : 404,
+            success: userFound,
+            message: userFound ? 'Successfully found the User!' : 'User not Found',
+            users: userFound ? [result] : result
+        }
+    } catch (err: any) {
+        return {
+            statusCode: 500,
+            success: false,
+            message: 'Internal Server Error!',
+            users:[]
+        }
+    }
+}
+
 const createUser = async (data: createUserInterface): Promise<generalResponseInterface> => {
     try {
         const id: string = 'USR-' + randomUUID();
-        const { name, email, password_hash } = data;
-        const result: User | [] = await UserModel.create(id, name, email, password_hash);
+        const { name, email, phonenumber, fcm_token } = data;
+        const result: User | [] = await UserModel.create(id, name, email, phonenumber, fcm_token, true);
         const userCreated = !Array.isArray(result);
         return {
             statusCode: userCreated ? 201 : 400,
@@ -105,13 +125,30 @@ const updateUserName = async (id: string, name: string): Promise<generalResponse
     }
 };
 
-const updateUserPassword = async (id: string, password_hash: string): Promise<generalResponseInterface> => {
+const updateUserFCMToken = async (id: string, fcm_token: string): Promise<generalResponseInterface> => {
     try {
-        const result: boolean = await UserModel.updatePassword(id, password_hash);
+        const result: boolean = await UserModel.updateFcmToken(id, fcm_token);
         return {
             statusCode: result ? 200 : 400,
             success: result,
-            message: result ? 'Successfully Updated the Password!' : 'Unable to Update password'
+            message: result ? 'Successfully Updated the Fcm Token!' : 'Unable to update the FCM_Token!'
+        }
+    } catch (err: any) {
+        return {
+            statusCode: 500,
+            success: false,
+            message: 'Internal Server Error!'
+        }
+    }
+}
+
+const updateUserPhoneNumber = async (id: string, phonenumber: string): Promise<generalResponseInterface> => {
+    try {
+        const result: boolean = await UserModel.updatePhonenumber(id, phonenumber);
+        return {
+            statusCode: result ? 200 : 400,
+            success: result,
+            message: result ? 'Successfully Updated the Phonenumber!' : 'Unable to Update Phonenumber'
         };
     } catch (err: any) {
         return {
@@ -121,6 +158,23 @@ const updateUserPassword = async (id: string, password_hash: string): Promise<ge
         };
     }
 };
+
+const updateUserIsActive = async (id: string, is_active: boolean): Promise<generalResponseInterface> => {
+    try {
+        const result: boolean = await UserModel.updateIsActive(id, is_active);
+        return {
+            statusCode: result ? 200 : 400,
+            success: result,
+            message: result ? 'Successfully Updated the IsActive!' : 'Unable to Update IsActive!'
+        }
+    } catch (err: any) {
+        return {
+            statusCode: 500,
+            success: false,
+            message: 'Internal Server Error!'
+        }
+    }
+}
 
 const updateUserRole = async (id: string, role: UserRole): Promise<generalResponseInterface> => {
     try {
@@ -160,10 +214,13 @@ const deleteUser = async (id: string): Promise<generalResponseInterface> => {
 export {
     getUsers,
     getUserByEmail,
+    getUserByPhoneNumber,
     getUserById,
     createUser,
     updateUserName,
-    updateUserPassword,
+    updateUserPhoneNumber,
+    updateUserFCMToken,
+    updateUserIsActive,
     updateUserRole,
     deleteUser
 };
