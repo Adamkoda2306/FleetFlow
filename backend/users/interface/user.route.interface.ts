@@ -1,5 +1,5 @@
 import { LargeNumberLike } from "crypto";
-import { User } from "../models/user.model";
+import { User, UserRole } from "../models/user.model";
 
 export interface getUsersInterface {
     statusCode: number;
@@ -17,7 +17,9 @@ export interface generalResponseInterface {
 };
 
 export interface createUserInterface {
+    id: string;
     name: string;
     email: string;
-    password_hash: string;
+    phonenumber: string;
+    fcm_token: string;
 };
