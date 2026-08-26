@@ -10,9 +10,12 @@ import {
     deleteUser,
     getUserByEmail,
     getUserById,
+    getUserByPhoneNumber,
     getUsers, 
+    updateUserFCMToken, 
+    updateUserIsActive, 
     updateUserName,
-    updateUserPassword,
+    updateUserPhoneNumber,
     updateUserRole
 } from "../services/user.services";
 import { UserRole } from "../models/user.model";
@@ -21,9 +24,12 @@ const getUsersController = async (req: AuthRequest, res: Response, next: NextFun
     if (typeof req.user === 'object' && req.user !== null && 'id' in req.user) {
         try {
             const email: string | null = req.query.email as string || null;
+            const phonenumber: string | null = req.query.phonenumber as string || null;
             let result: getUsersInterface;
             if (email != null) {
                 result = await getUserByEmail(email);
+            } else if (phonenumber != null) {
+                result = await getUserByPhoneNumber(phonenumber);
             } else {
                 result = await getUsers();
             }
@@ -35,6 +41,10 @@ const getUsersController = async (req: AuthRequest, res: Response, next: NextFun
                         id: user.id,
                         name: user.name,
                         email: user.email,
+                        phonenumber: user.phonenumber,
+                        role: user.role,
+                        fcmToken: user.fcm_token,
+                        is_active: user.is_active
                     })),
                 })
             });
@@ -63,7 +73,11 @@ const getUserByIdController = async (req: AuthRequest, res: Response, next: Next
                     user: result.users.map((user) => ({
                         id: user.id,
                         name: user.name,
-                        email: user.email
+                        email: user.email,
+                        phonenumber: user.phonenumber,
+                        role: user.role,
+                        fcmToken: user.fcm_token,
+                        is_active: user.is_active
                     })),
                 })
             });
@@ -87,7 +101,9 @@ const createUserController = async (req: AuthRequest, res: Response, next: NextF
             const result: generalResponseInterface = await createUser(data);
             return res.status(result.statusCode).json({
                 success: result.success,
-                message: result.message
+                message: result.message,
+                id: result.id,
+                role: result.role
             });
         } catch (err: any) {
             return res.status(500).json({
@@ -125,12 +141,12 @@ const updateNameController = async (req: AuthRequest, res: Response, next: NextF
     });
 };
 
-const updatePasswordController = async (req: AuthRequest, res: Response, next: NextFunction) => {
+const updatePhoneNumberController = async (req: AuthRequest, res: Response, next: NextFunction) => {
     if (typeof req.user === 'object' && req.user !== null && 'id' in req.user) {
         try {
             const id: string = req.params.id as string;
-            const password_hash: string = req.body.password_hash as string;
-            const result: generalResponseInterface = await updateUserPassword(id, password_hash);
+            const phonenumber: string = req.body.phonenumber as string;
+            const result: generalResponseInterface = await updateUserPhoneNumber(id, phonenumber);
             return res.status(result.statusCode).json({
                 success: result.success,
                 message: result.message
@@ -144,9 +160,55 @@ const updatePasswordController = async (req: AuthRequest, res: Response, next: N
     }
     return res.status(401).json({
         success: false,
-        message: "Invalid token payload"
+        message: 'Invalid token payload'
     });
-};
+}
+
+const updateFCMTokenController = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (typeof req.user === 'object' && req.user !== null && 'id' in req.user) {
+        try {
+            const id: string = req.params.id as string;
+            const fcmToken: string = req.params.fcm_token as string;
+            const result: generalResponseInterface = await updateUserFCMToken(id, fcmToken);
+            return res.status(result.statusCode).json({
+                success: result.success,
+                message: result.message
+            });
+        } catch (err: any) {
+            return res.status(500).json({
+                success: false,
+                message: 'Internal Server Error!'
+            });
+        }
+    }
+    return res.status(401).json({
+        success: false,
+        message: 'Invalid token payload'
+    });
+}
+
+const updateIsActiveController = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (typeof req.user === 'object' && req.user !== null && 'id' in req.user) {
+        try {
+            const id: string = req.params.id as string;
+            const is_active: boolean = req.body.is_active as boolean;
+            const result: generalResponseInterface = await updateUserIsActive(id, is_active);
+            return res.status(result.statusCode).json({
+                success: result.success,
+                message: result.message
+            });
+        } catch (err: any) {
+            return res.status(500).json({
+                success: false,
+                message: 'Internal Server Error!'
+            });
+        }
+    }
+    return res.status(401).json({
+        success: false,
+        message: 'Invalid token payload'
+    });
+}
 
 const updateRoleController = async (req: AuthRequest, res: Response, next: NextFunction) => {
     if (typeof req.user === 'object' && req.user !== null && 'id' in req.user) {
@@ -198,7 +260,9 @@ export {
     getUserByIdController,
     createUserController,
     updateNameController,
-    updatePasswordController,
+    updatePhoneNumberController,
+    updateFCMTokenController,
+    updateIsActiveController,
     updateRoleController,
     deleteUserController
 };
