@@ -94,7 +94,7 @@ export class UserModel {
     email: string,
     phonenumber: string,
     fcm_token: string,
-    is_active: true,
+    is_active: boolean = true,
     role: UserRole = "USER",
     connection: Pool | PoolConnection = pool
   ): Promise<User | []> {
