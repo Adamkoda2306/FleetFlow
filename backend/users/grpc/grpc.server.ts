@@ -1,7 +1,13 @@
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import path from "path";
-import { registerUser, getUser } from "./user-utils.grpc";
+import { 
+    registerUserDetails, 
+    updateLoginDetails, 
+    updateLogoutDetails, 
+    updateUserNameDetails, 
+    updateUserPhonenumberDetails
+} from "./user-utils.grpc";
 
 
 const PROTO_PATH = path.join(
@@ -35,8 +41,11 @@ const server = new grpc.Server();
 server.addService(
     grpcPackage.users.UserService.service,
     {
-        CreateUser: registerUser,
-        GetUser: getUser
+        registerUser: registerUserDetails,
+        updateLogin: updateLoginDetails,
+        updateLogout: updateLogoutDetails,
+        updateName: updateUserNameDetails,
+        updatePhonenumber: updateUserPhonenumberDetails
     }
 );
 
